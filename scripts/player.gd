@@ -1,5 +1,7 @@
 extends CharacterBody2D
 
+@onready var sprite: AnimatedSprite2D = $Sprite
+
 const SPEED = 300.0
 const DASH_SPEED = 1500.0
 const RUN_MULTIPLIER = 1.5
@@ -25,6 +27,11 @@ func _physics_process(delta: float) -> void:
 		handle_dash(delta)
 	else:
 		velocity = input_direction * SPEED * speed_multiplier
+	
+	if velocity.x < 0:
+		sprite.flip_h = true
+	else:
+		sprite.flip_h = false
 	
 	move_and_slide()
 	update_timers(delta)

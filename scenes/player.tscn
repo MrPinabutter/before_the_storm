@@ -1,6 +1,6 @@
 [gd_scene load_steps=9 format=3 uid="uid://qxg8k6w3a83o"]
 
-[ext_resource type="Script" path="res://scenes/player.gd" id="1_gtaop"]
+[ext_resource type="Script" path="res://scripts/player.gd" id="1_gtaop"]
 [ext_resource type="Texture2D" uid="uid://dfm3re71vg0g3" path="res://assets/knight.png" id="1_sg2tl"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_m6yk4"]
@@ -43,13 +43,13 @@ animations = [{
 "speed": 10.0
 }]
 
-[node name="Player" type="CharacterBody2D"]
+[node name="Player" type="CharacterBody2D" groups=["Player"]]
 script = ExtResource("1_gtaop")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CapsuleShape2D_m6yk4")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+[node name="Sprite" type="AnimatedSprite2D" parent="."]
 texture_filter = 1
 position = Vector2(0.999996, -13)
 scale = Vector2(2.75, 2.75)
