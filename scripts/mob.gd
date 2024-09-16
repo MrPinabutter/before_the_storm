@@ -14,17 +14,19 @@ var movement_controller: MovementController
 enum {
 	STAND,
 	SURROUND,
-	ATTACK,
-	STOPPED,
+	HUNT,
+	WAIT,
 	HIT
 }
 
-var state = ATTACK
+var state = HUNT
 
 func _ready() -> void:
 	call_deferred("seeker_setup")
 	movement_controller = MovementController.new()
+	
 	movement_controller.initialize(sprite)
+	
 	movement_controller.speed = SPEED
 	movement_controller.dash_speed = DASH_SPEED
 	movement_controller.dash_duration = DASH_DURATION
@@ -37,6 +39,7 @@ func seeker_setup():
 func move(target, delta, _current_speed = movement_controller.speed):
 	if navigation_agent_2d.is_navigation_finished():
 		return
+	
 	var current_agent_position = global_position
 	var next_agent_position = navigation_agent_2d.get_next_path_position()
 	
@@ -50,24 +53,30 @@ func _physics_process(delta: float) -> void:
 	if player:
 		navigation_agent_2d.target_position = player.global_position
 	match state:
-		ATTACK:
+		HUNT:
 			move(player.global_position, delta)
 		HIT:
 			handle_hit_player()
-		STOPPED:
-			pass # TODO: ADD ATTACK DIRECTION INDICATOR
+		WAIT:
+			pass # TODO: ADD HUNT DIRECTION INDICATOR
 
 func _on_range_hit_box_body_entered(body: Node2D) -> void:
-	if body.is_in_group("Player") and movement_controller.can_dash() and not movement_controller.is_dashing:
-		state = STOPPED
+	if body is Player and movement_controller.can_dash() and not movement_controller.is_dashing:
+		state = WAIT
 		hit_timer.start()
 
 func _on_hit_timer_timeout() -> void:
 	if not movement_controller.can_dash() and movement_controller.is_dashing:
-		state = ATTACK
+		state = HUNT
 	else:
 		state = HIT
 
 func handle_hit_player():
 	movement_controller.start_dash(global_position.direction_to(player.global_position))
-	state = ATTACK
+	state = HUNT
+
+func _on_hurt_box_body_entered(body: Node2D) -> void:
+	if body is Player:
+		var health_controller = body.get_node("HealthController")
+		health_controller.hurt(10)
+		print(health_controller.health)

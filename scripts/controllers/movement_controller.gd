@@ -1,5 +1,4 @@
-extends RefCounted
-class_name MovementController
+class_name MovementController extends Node
 
 var sprite: AnimatedSprite2D
 

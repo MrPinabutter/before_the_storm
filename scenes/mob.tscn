@@ -42,12 +42,11 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ji2dh"]
 size = Vector2(13, 13)
 
-[sub_resource type="GDScript" id="GDScript_k473k"]
-script/source = "extends Area2D
-"
-
 [sub_resource type="CircleShape2D" id="CircleShape2D_6aqix"]
-radius = 166.075
+radius = 112.018
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_rsdnn"]
+size = Vector2(18, 16)
 
 [node name="Enemy" type="CharacterBody2D" groups=["Enemy"]]
 script = ExtResource("1_6opsh")
@@ -60,7 +59,7 @@ sprite_frames = SubResource("SpriteFrames_4oaew")
 autoplay = "default"
 frame_progress = 0.463287
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape" type="CollisionShape2D" parent="."]
 position = Vector2(-1.5, 2.5)
 shape = SubResource("RectangleShape2D_ji2dh")
 
@@ -71,7 +70,6 @@ radius = 95.71
 debug_enabled = true
 
 [node name="RangeHitBox" type="Area2D" parent="."]
-script = SubResource("GDScript_k473k")
 
 [node name="CollisionShape" type="CollisionShape2D" parent="RangeHitBox"]
 shape = SubResource("CircleShape2D_6aqix")
@@ -80,5 +78,12 @@ shape = SubResource("CircleShape2D_6aqix")
 wait_time = 0.5
 one_shot = true
 
+[node name="HurtBox" type="Area2D" parent="."]
+
+[node name="CollisionShape" type="CollisionShape2D" parent="HurtBox"]
+position = Vector2(-1, 2)
+shape = SubResource("RectangleShape2D_rsdnn")
+
 [connection signal="body_entered" from="RangeHitBox" to="." method="_on_range_hit_box_body_entered"]
 [connection signal="timeout" from="HitTimer" to="." method="_on_hit_timer_timeout"]
+[connection signal="body_entered" from="HurtBox" to="." method="_on_hurt_box_body_entered"]
